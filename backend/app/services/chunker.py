@@ -75,14 +75,14 @@ def chunk_code(code: str, file_path: str):
             name = extract_name(node, code)
 
             chunks.append({
-                "type": node.type,
-                "name": name,
-                "code": chunk_text,
-                "filePath": file_path,
-                "language": language,
-                "startLine": node.start_point[0],
-                "endLine": node.end_point[0]
-            })
+    "type": node.type,
+    "name": name,
+    "code": chunk_text,
+    "file_path": file_path,  
+    "language": language,
+    "startLine": node.start_point[0],
+    "endLine": node.end_point[0]
+})
 
         for child in node.children:
             walk(child)
