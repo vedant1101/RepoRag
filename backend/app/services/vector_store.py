@@ -1,5 +1,5 @@
 from qdrant_client import QdrantClient
-from qdrant_client.models import PointStruct, Filter, FieldCondition, MatchValue
+from qdrant_client.models import PointStruct, Filter, FieldCondition, MatchValue, PayloadSchemaType
 from app.core.config import settings
 import uuid
 
@@ -10,6 +10,19 @@ client = QdrantClient(
 )
 
 COLLECTION_NAME = "repo_chunks"
+
+def create_index():
+    try:
+        client.create_payload_index(
+            collection_name=COLLECTION_NAME,
+            field_name="repo_url",
+            field_schema=PayloadSchemaType.KEYWORD
+        )
+        print("Index created for repo_url")
+    except Exception as e:
+        print(f"Index already exists or error: {e}")
+
+create_index()
 
 def insert_chunks(chunks, repo_url: str):
     points = [
