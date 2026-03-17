@@ -23,7 +23,7 @@ def query_repository(data: QueryRequest):
             raise HTTPException(status_code=500, detail="Failed to embed question")
 
         print("🔎 Searching Qdrant...")
-        search_results = search_chunks(question_embedding)
+        search_results = search_chunks(question_embedding, repo_url)
         if not search_results:
             raise HTTPException(status_code=404, detail="No relevant chunks found")
 

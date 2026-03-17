@@ -47,7 +47,7 @@ def clone_repository(request: RepoRequest):
         })
         print(f"Processed {file} — {len(chunks)} chunks")
 
-    insert_chunks(all_chunks)
+    insert_chunks(all_chunks, repo_url)
 
     return {
         "message": "Repository processed successfully",
