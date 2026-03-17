@@ -4,17 +4,16 @@
 > A full-stack RAG (Retrieval-Augmented Generation) pipeline that lets you semantically search and query any GitHub repository using natural language. Powered by vector embeddings, Qdrant, and Llama 3.3 70B via Groq.
 
 <br/>
-```
-$ ask "How does authentication work in this repo?"
 
-  Searching chunks across hundreds of files...
+    $ ask "How does authentication work in this repo?"
 
-  ✓ The auth middleware validates JWT tokens using jsonwebtoken,
-    extracts the user ID from the payload, and attaches it to
-    req.user for downstream handlers.
+      Searching chunks across hundreds of files...
 
-  Sources: middleware/auth.js · utils/jwt.js · +3 more
-```
+      ✓ The auth middleware validates JWT tokens using jsonwebtoken,
+        extracts the user ID from the payload, and attaches it to
+        req.user for downstream handlers.
+
+      Sources: middleware/auth.js · utils/jwt.js · +3 more
 
 <br/>
 
@@ -39,32 +38,27 @@ $ ask "How does authentication work in this repo?"
 <br/>
 
 ## 🏗️ Architecture
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        INGESTION PIPELINE                   │
-│                                                             │
-│  GitHub URL → Clone → Scan Files → Chunk Code               │
-│                              ↓                              │
-│                    Generate Embeddings                      │
-│                    (HuggingFace API)                        │
-│                              ↓                              │
-│                          Qdrant                             │
-│                      (vectors + code)                       │
-└─────────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────┐
-│                        QUERY PIPELINE                       │
-│                                                             │
-│  User Question → Embed Question (HuggingFace)               │
-│                          ↓                                  │
-│              Qdrant Similarity Search                       │
-│                    (top 5 chunks)                           │
-│                          ↓                                  │
-│         Send Context + Question → Groq / Llama 3            │
-│                          ↓                                  │
-│              Return Answer + Source Files                   │
-└─────────────────────────────────────────────────────────────┘
-```
+**Ingestion Pipeline**
+
+    GitHub URL → Clone → Scan Files → Chunk Code
+                                ↓
+                      Generate Embeddings
+                      (HuggingFace API)
+                                ↓
+                            Qdrant
+                        (vectors + code)
+
+**Query Pipeline**
+
+    User Question → Embed Question (HuggingFace)
+                            ↓
+                Qdrant Similarity Search
+                      (top 5 chunks)
+                            ↓
+             Send Context + Question → Groq / Llama 3
+                            ↓
+                  Return Answer + Source Files
 
 <br/>
 
@@ -101,41 +95,40 @@ $ ask "How does authentication work in this repo?"
 <br/>
 
 ## 📁 Project Structure
-```
-RepoRAG/
-│
-├── 📦 backend/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── Procfile
-│   │
-│   └── app/
-│       ├── main.py
-│       ├── api/v1/
-│       │   ├── repo.py
-│       │   └── query.py
-│       ├── core/
-│       │   └── config.py
-│       ├── models/
-│       │   ├── repo.py
-│       │   └── query.py
-│       ├── services/
-│       │   ├── chunker.py
-│       │   ├── embedding_service.py
-│       │   ├── llm_service.py
-│       │   └── vector_store.py
-│       └── ingestion/
-│           ├── repo_cloner.py
-│           └── scanner.py
-│
-└── 🎨 frontend/
-    └── app/
-        ├── page.tsx
-        ├── repo/
-        │   └── page.tsx
-        └── chat/
-            └── page.tsx
-```
+
+    RepoRAG/
+    │
+    ├── backend/
+    │   ├── Dockerfile
+    │   ├── requirements.txt
+    │   ├── Procfile
+    │   │
+    │   └── app/
+    │       ├── main.py
+    │       ├── api/v1/
+    │       │   ├── repo.py
+    │       │   └── query.py
+    │       ├── core/
+    │       │   └── config.py
+    │       ├── models/
+    │       │   ├── repo.py
+    │       │   └── query.py
+    │       ├── services/
+    │       │   ├── chunker.py
+    │       │   ├── embedding_service.py
+    │       │   ├── llm_service.py
+    │       │   └── vector_store.py
+    │       └── ingestion/
+    │           ├── repo_cloner.py
+    │           └── scanner.py
+    │
+    └── frontend/
+        └── app/
+            ├── page.tsx
+            ├── repo/
+            │   └── page.tsx
+            └── chat/
+                └── page.tsx
 
 <br/>
 
@@ -148,43 +141,36 @@ RepoRAG/
 - Accounts on: [HuggingFace](https://huggingface.co) · [Qdrant](https://cloud.qdrant.io) · [Groq](https://console.groq.com)
 
 ### 1. Clone the repo
-```bash
-git clone https://github.com/vedant1101/RepoRAG.git
-cd RepoRAG
-```
+
+    git clone https://github.com/vedant1101/RepoRAG.git
+    cd RepoRAG
 
 ### 2. Backend setup
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+
+    cd backend
+    python -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
 
 Create `backend/.env`:
-```env
-QDRANT_URL=your_qdrant_url
-QDRANT_API_KEY=your_qdrant_api_key
-GROQ_API_KEY=your_groq_key
-HF_API_KEY=your_huggingface_token
-```
-```bash
-uvicorn app.main:app --reload
-```
+
+    QDRANT_URL=your_qdrant_url
+    QDRANT_API_KEY=your_qdrant_api_key
+    GROQ_API_KEY=your_groq_key
+    HF_API_KEY=your_huggingface_token
+
+    uvicorn app.main:app --reload
 
 ### 3. Frontend setup
-```bash
-cd frontend
-npm install
-```
+
+    cd frontend
+    npm install
 
 Create `frontend/.env.local`:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-```bash
-npm run dev
-```
+
+    NEXT_PUBLIC_API_URL=http://localhost:8000
+
+    npm run dev
 
 Visit `http://localhost:3000` 🎉
 
@@ -196,46 +182,42 @@ Visit `http://localhost:3000` 🎉
 Clone and index a GitHub repository.
 
 **Request:**
-```json
-{
-  "repoUrl": "https://github.com/expressjs/express"
-}
-```
+
+    {
+      "repoUrl": "https://github.com/expressjs/express"
+    }
 
 **Response:**
-```json
-{
-  "message": "Repository processed successfully",
-  "totalFiles": 245,
-  "processedFiles": 20
-}
-```
+
+    {
+      "message": "Repository processed successfully",
+      "totalFiles": 245,
+      "processedFiles": 20
+    }
 
 ### `POST /api/v1/query-repo`
 Query an indexed repository with a natural language question.
 
 **Request:**
-```json
-{
-  "question": "How does routing work?",
-  "repoUrl": "https://github.com/expressjs/express"
-}
-```
+
+    {
+      "question": "How does routing work?",
+      "repoUrl": "https://github.com/expressjs/express"
+    }
 
 **Response:**
-```json
-{
-  "question": "How does routing work?",
-  "answer": "Express uses a layer-based routing system...",
-  "sourcesUsed": [
+
     {
-      "id": "path/to/file.js",
-      "filePath": "/tmp/repos/express/lib/router/index.js",
-      "codePreview": "..."
+      "question": "How does routing work?",
+      "answer": "Express uses a layer-based routing system...",
+      "sourcesUsed": [
+        {
+          "id": "path/to/file.js",
+          "filePath": "/tmp/repos/express/lib/router/index.js",
+          "codePreview": "..."
+        }
+      ]
     }
-  ]
-}
-```
 
 <br/>
 
