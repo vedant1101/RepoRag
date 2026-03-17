@@ -1,7 +1,7 @@
 # RepoRAG 🔍
 ### _Ask your codebase anything. Get answers in seconds._
 
-> A full-stack RAG (Retrieval-Augmented Generation) pipeline that lets you semantically search and query any GitHub repository using natural language. Powered by vector embeddings, Qdrant, and Llama 3.
+> A full-stack RAG (Retrieval-Augmented Generation) pipeline that lets you semantically search and query any GitHub repository using natural language. Powered by vector embeddings, Qdrant, and Llama 3.3 70B via Groq.
 
 <br/>
 ```
